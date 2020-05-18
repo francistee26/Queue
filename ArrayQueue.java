@@ -2,48 +2,52 @@ import java.util.Arrays;
 
 public class ArrayQueue {
     private int[] queue;
-    private int count1;
-    private int count2;
-    private int index;
+    private int front;
+    private int rear;
+    private int count;
 
     public ArrayQueue(int capacity) {
         if (capacity == 0)
             throw new IllegalStateException("Capacity must be 1 or greater");
         this.queue = new int[capacity];
-        //this.count1 = capacity;
-        this.count1 = 0;
-        this.count2 = 0;
+        this.count = 0;
+        this.front = 0;
+        this.rear = 0;
     }
 
     public void enqueue(int item) {
         if (isFull())
             throw new IllegalStateException("Queue is full");
-        queue[count1++] = item;
-        // index++;
+        queue[rear] = item;
+        rear = (rear + 1) % queue.length;
+        count++;
     }
 
     public int dequeue() {
         if (isEmpty())
-            throw new StackOverflowError("Queue is empty");
-        return queue[count2++];
+        throw new StackOverflowError("Queue is empty");
+        var item = queue[front];
+        queue[front] = 0;
+        front = (front + 1) % queue.length;
+        count--;
+        return item;
    }
 
 
     public int peek(){
-        return queue[count2];
+        return queue[front];
     }
 
     private boolean isFull() {
-        return count1 == queue.length;
+        return count == queue.length;
     }
 
     private boolean isEmpty() {
-        return count1 == 0;
+        return rear == 0;
     }
 
     @Override
     public String toString() {
-        var content = Arrays.copyOfRange(queue, 0, index);
-        return Arrays.toString(content);
+        return Arrays.toString(queue);
     }
 }
