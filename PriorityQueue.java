@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Stack;
 
 public class PriorityQueue {
     private int[] items;
@@ -13,18 +14,30 @@ public class PriorityQueue {
     public void add(int item){
         if(isFull())
             resize();
-        int i = shift(item);
-        items[i+1] = item;
+        int i = shiftItemsToInsert(item);
+        items[i] = item;
         count++;
     }
 
     public int remove(){
         if(isEmpty())
             throw new IllegalStateException("Queue is empty");
-        return items[count2++];
+        var val = items[count2];
+        items[count2++] = 0;
+        return val;
     }
 
-    private int shift(int item) {
+    public int[] reverseQueueToKth(int k){
+        Stack<Integer> stack = new Stack<>();
+        for(int i = k-1; i >= 0; i--)
+            stack.push(remove());
+
+        for(int j = 0; j < k; j++)
+            items[j] = stack.pop();
+        return items; 
+    }
+
+    private int shiftItemsToInsert(int item) {
         int i;
         for (i = count-1; i>=0; i-- ){
             if(items[i] > item)
@@ -32,7 +45,7 @@ public class PriorityQueue {
         else
             break;
         }
-        return i;
+        return i+1;
     }
 
     private int[] resize(){

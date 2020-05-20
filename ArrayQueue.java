@@ -1,5 +1,6 @@
 import java.util.Arrays;
 
+
 public class ArrayQueue {
     private int[] queue;
     private int front;
